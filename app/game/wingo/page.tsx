@@ -1,8 +1,21 @@
+'use client';
+
+import { useAuth } from '@/lib/firebase/AuthContext';
+import { useRouter } from 'next/navigation';
+import WingoBoard from '@/components/game/WingoBoard';
+
 export default function WingoPage() {
-  return (
-    <div className="text-center">
-      <h1 className="text-3xl font-bold">WINGO — Coming in Phase 1‑B</h1>
-      <p className="mt-4">Our first game module will replace this page.</p>
-    </div>
-  );
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  if (loading) {
+    return <div className="text-center py-8">Loading...</div>;
+  }
+
+  if (!user) {
+    router.push('/login');
+    return null;
+  }
+
+  return <WingoBoard />;
 }
