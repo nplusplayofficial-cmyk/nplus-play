@@ -2,79 +2,141 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark theme with gold accents */
+/* Import Classic Font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;600;700&display=swap');
+
 :root {
-  --background: #0a0a0f;
-  --foreground: #ffffff;
-  --gold: #f5c518;
-  --gold-dark: #b8860b;
+  --background: #0a0808;
+  --gold-start: #bf953f;
+  --gold-mid: #fcf6ba;
+  --gold-end: #b38728;
+  --gold-light: #fbf5b7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: #ffffff;
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-/* Gold gradient for headings */
+/* 3D Perspective Wrapper */
+.perspective-3d {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* Gold Text (Classic Casino Look) */
 .gold-text {
-  background: linear-gradient(135deg, #f5c518, #ffd700, #f5c518);
+  background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: shimmerGold 4s ease-in-out infinite;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
 }
 
-/* Premium card style */
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 215, 0, 0.2);
-  border-radius: 16px;
-  transition: all 0.3s ease;
+@keyframes shimmerGold {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.glass-card:hover {
-  border-color: var(--gold);
-  box-shadow: 0 0 20px rgba(245, 197, 24, 0.2);
-  transform: translateY(-4px);
+/* Premium Glass Card (3D Tilt Ready) */
+.glass-card-3d {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8);
 }
 
-/* Gold button */
-.btn-gold {
-  background: linear-gradient(135deg, #f5c518, #b8860b);
-  color: #0a0a0f;
-  font-weight: bold;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+.glass-card-3d:hover {
+  border-color: #f5c518;
+  box-shadow: 0 0 40px rgba(245, 197, 24, 0.15), inset 0 0 30px rgba(245, 197, 24, 0.05);
+  transform: translateY(-8px) scale(1.02);
 }
 
-.btn-gold:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(245, 197, 24, 0.4);
+/* Shimmering Border for Active Cards */
+.border-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.border-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  background: conic-gradient(from 0deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #bf953f);
+  background-size: 400% 400%;
+  animation: rotateShimmer 6s linear infinite;
+  border-radius: 22px;
 }
 
-/* Game card container */
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.5rem;
+@keyframes rotateShimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Bottom nav */
-.bottom-nav {
-  background: rgba(10, 10, 15, 0.9);
-  backdrop-filter: blur(12px);
+/* Floating 3D Orbs (Background) */
+.floating-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  z-index: -10;
+  animation: floatOrb 12s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #f5c518, transparent);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #b8860b, transparent);
+  bottom: -20%;
+  right: -10%;
+  animation-delay: -4s;
+}
+.orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #ffd700, transparent);
+  top: 50%;
+  left: 50%;
+  animation-delay: -8s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, -40px) scale(1.2); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1a1410; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#bf953f, #fcf6ba); border-radius: 10px; }
+
+/* Bottom Nav Premium */
+.bottom-nav-premium {
+  background: rgba(10, 8, 8, 0.85);
+  backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #1a1a24;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--gold);
-  border-radius: 10px;
+  box-shadow: 0 -10px 30px -10px rgba(0, 0, 0, 0.8);
 }
