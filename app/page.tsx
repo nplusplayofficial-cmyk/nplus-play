@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/firebase/AuthContext';
 import Link from 'next/link';
-import GameCard from '@/components/ui/GameCard';
+import GameCard3D from '@/components/ui/GameCard3D';
 
 const games = [
   { name: 'WINGO', icon: '🎰', rtp: '96.64%', link: '/game/wingo', popular: true },
@@ -21,34 +21,36 @@ export default function Home() {
   if (loading) return <div className="text-center text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white pb-24">
+    <div className="min-h-screen text-white pb-8 perspective-3d">
       {/* Hero Section */}
       <section className="text-center py-12 px-4">
-        <h1 className="text-5xl md:text-6xl font-bold gold-text mb-4">
+        <h1 className="text-6xl md:text-7xl gold-text font-black mb-4 tracking-wider">
           N+ PLAY
         </h1>
-        <p className="text-lg text-gray-400">The future of high‑frequency gaming.</p>
+        <p className="text-lg text-gray-300 font-light tracking-widest">
+          The future of high‑frequency gaming.
+        </p>
         {user && (
-          <p className="mt-2 text-sm text-gray-300">
-            Welcome back, {user.displayName || user.email}!
+          <p className="mt-2 text-sm text-gray-400">
+            Welcome back, <span className="text-gold">{user.displayName || user.email}</span>!
           </p>
         )}
       </section>
 
-      {/* Categories (Daman-style tabs) */}
-      <div className="flex gap-6 justify-center mb-8 text-sm font-medium">
-        <span className="text-gold border-b-2 border-gold pb-1">Popular</span>
-        <span className="text-gray-400 hover:text-white cursor-pointer">Lottery</span>
-        <span className="text-gray-400 hover:text-white cursor-pointer">Casino</span>
-        <span className="text-gray-400 hover:text-white cursor-pointer">Slots</span>
-        <span className="text-gray-400 hover:text-white cursor-pointer">Rummy</span>
+      {/* Categories */}
+      <div className="flex gap-8 justify-center mb-10 text-sm font-medium tracking-wider">
+        <span className="gold-text border-b-2 border-gold pb-1">Popular</span>
+        <span className="text-gray-400 hover:text-white cursor-pointer transition">Lottery</span>
+        <span className="text-gray-400 hover:text-white cursor-pointer transition">Casino</span>
+        <span className="text-gray-400 hover:text-white cursor-pointer transition">Slots</span>
+        <span className="text-gray-400 hover:text-white cursor-pointer transition">Rummy</span>
       </div>
 
-      {/* Game Cards Grid */}
+      {/* Game Grid */}
       <div className="container mx-auto px-4">
-        <div className="game-grid">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {games.map((game) => (
-            <GameCard
+            <GameCard3D
               key={game.name}
               name={game.name}
               icon={game.icon}
@@ -60,21 +62,21 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Top Winners (like Daman) */}
-      <div className="container mx-auto px-4 mt-12">
-        <h3 className="text-xl gold-text mb-4">🏆 Today's Top Winners</h3>
-        <div className="glass-card p-4 space-y-2">
-          <div className="flex justify-between text-sm">
+      {/* Top Winners */}
+      <div className="container mx-auto px-4 mt-14">
+        <h3 className="text-2xl gold-text font-bold mb-4 tracking-wider">🏆 Today's Top Winners</h3>
+        <div className="glass-card-3d p-5 space-y-3 border border-gold/10">
+          <div className="flex justify-between text-sm items-center">
             <span className="text-gray-300">1. Mem***JVN</span>
-            <span className="text-gold">+₱933,520</span>
+            <span className="gold-text font-bold">+₱933,520</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm items-center">
             <span className="text-gray-300">2. Su***aj</span>
-            <span className="text-gold">+₱748,205</span>
+            <span className="gold-text font-bold">+₱748,205</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm items-center">
             <span className="text-gray-300">3. Kap***oor</span>
-            <span className="text-gold">+₱490,980</span>
+            <span className="gold-text font-bold">+₱490,980</span>
           </div>
         </div>
       </div>
