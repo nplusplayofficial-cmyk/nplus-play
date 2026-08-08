@@ -2,18 +2,39 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { db } from '@/lib/firebase/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function GamesPage() {
   const [selectedGame, setSelectedGame] = useState('WINGO');
   const [predictedColor, setPredictedColor] = useState('');
   const [predictedNumber, setPredictedNumber] = useState('');
   const [crashPoint, setCrashPoint] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handlePredict = () => {
-    alert(`🎯 Prediction set for ${selectedGame}:
+  const handlePredict = async () => {
+    setMessage('Saving prediction...');
+    
+    try {
+      // Save override to Firestore
+      await setDoc(doc(db, 'gameOverrides', 'wingo'), {
+        color: predictedColor || null,
+        number: predictedNumber ? parseInt(predictedNumber) : null,
+        active: true,
+        setBy: 'admin',
+        updatedAt: new Date().toISOString()
+      });
+
+      setMessage(`✅ Prediction set for ${selectedGame}!
 Color: ${predictedColor || 'Random'}
-Number: ${predictedNumber || 'Random'}
-Crash: ${crashPoint || 'Default'}`);
+Number: ${predictedNumber || 'Random'}`);
+      
+      // Clear after 3 seconds
+      setTimeout(() => setMessage(''), 5000);
+      
+    } catch (error) {
+      setMessage('❌ Error saving prediction: ' + error);
+    }
   };
 
   return (
@@ -23,6 +44,15 @@ Crash: ${crashPoint || 'Default'}`);
       </Link>
       
       <h1 className="text-3xl gold-text font-bold mb-6">🎮 Game Control</h1>
+
+      {/* Success/Error Message */}
+      {message && (
+        <div className={`glass-card-3d p-3 mb-4 text-center ${
+          message.includes('✅') ? 'border-green-500' : 'border-red-500'
+        }`}>
+          <p className="text-sm">{message}</p>
+        </div>
+      )}
 
       <div className="glass-card-3d p-6 space-y-6">
         {/* Game Selector */}
@@ -71,20 +101,34 @@ Crash: ${crashPoint || 'Default'}`);
               >
                 🟣 Violet
               </button>
+              <button
+                onClick={() => setPredictedColor('')}
+                className="px-3 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 text-xs"
+              >
+                ✕ Clear
+              </button>
             </div>
           </div>
 
           <div>
             <label className="block text-gray-400 text-sm mb-2">Predict Number (0-9)</label>
-            <input
-              type="number"
-              min="0"
-              max="9"
-              value={predictedNumber}
-              onChange={(e) => setPredictedNumber(e.target.value)}
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white"
-              placeholder="Leave empty for random"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="0"
+                max="9"
+                value={predictedNumber}
+                onChange={(e) => setPredictedNumber(e.target.value)}
+                className="flex-1 p-3 bg-gray-800 border border-gray-700 rounded-lg text-white"
+                placeholder="Random"
+              />
+              <button
+                onClick={() => setPredictedNumber('')}
+                className="px-3 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 text-xs"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
 
@@ -106,14 +150,16 @@ Crash: ${crashPoint || 'Default'}`);
         {/* Apply Button */}
         <button
           onClick={handlePredict}
-          className="w-full btn-gold py-3 rounded-lg"
+          className="w-full btn-gold py-3 rounded-lg text-black font-bold"
         >
-          Apply Prediction
+          🎯 Apply Prediction to Next Round
         </button>
 
-        <p className="text-xs text-gray-500 text-center">
-          Admin override — sets the next game result manually
-        </p>
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
+          <p className="text-xs text-yellow-400 text-center">
+            ⚡ Admin override active — next game will use your prediction, then auto-reset
+          </p>
+        </div>
       </div>
 
       {/* Current Stats */}
