@@ -16,9 +16,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* 3D Background Orbs */}
+        <div className="floating-orb orb-1"></div>
+        <div className="floating-orb orb-2"></div>
+        <div className="floating-orb orb-3"></div>
+        
         <AuthProvider>
           <Header />
-          <main className="container mx-auto px-4 py-8 pb-24">{children}</main>
+          <main className="container mx-auto px-4 py-8 pb-24 relative z-10">
+            {children}
+          </main>
           <BottomNav />
         </AuthProvider>
       </body>
