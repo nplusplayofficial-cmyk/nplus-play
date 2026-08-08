@@ -2,13 +2,13 @@ import { db } from '@/lib/firebase/firebase';
 import {
   doc,
   runTransaction,
-  updateDoc,
   increment,
   getDoc,
 } from 'firebase/firestore';
 
 export interface Bet {
   id: string;
+  userId: string;        // ✅ ADD THIS LINE
   game: 'wingo' | 'k3' | '5d' | 'trx';
   amount: number;
   betData: any;
@@ -46,7 +46,7 @@ export const placeBet = async (
     const betRef = doc(db, 'bets', betId);
     transaction.set(betRef, {
       id: betId,
-      userId,
+      userId,              // ✅ store userId
       game,
       amount,
       betData,
@@ -72,7 +72,7 @@ export const settleBet = async (
   const betData = betSnap.data() as Bet;
   if (betData.status !== 'pending') throw new Error('Bet already settled');
 
-  const userId = betData.userId;
+  const userId = betData.userId;   // ✅ now this works
   const userRef = doc(db, 'users', userId);
 
   let newBalance = 0;
